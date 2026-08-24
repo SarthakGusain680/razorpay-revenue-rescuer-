@@ -1,3 +1,9 @@
+---
+title: Revenue Rescuer Backend
+sdk: docker
+app_port: 7860
+---
+
 # ⚡ Revenue Rescuer
 
 Track 03 — AI Revenue Recovery | Razorpay Buildathon 2026
