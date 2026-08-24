@@ -1,7 +1,8 @@
-import { sql } from "@/lib/db";
-import { runIntervention } from "@/lib/logic";
+import { sql } from "../../../../lib/db";
+import { runIntervention } from "../../../../lib/logic";
 
 export async function POST(req: Request) {
+
   const body = await req.json();
   const rows = await sql`
     INSERT INTO abandoned_carts (user_email, user_phone, cart_value, items, customer_type, status)

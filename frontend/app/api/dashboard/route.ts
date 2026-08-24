@@ -1,6 +1,7 @@
-import { sql } from "@/lib/db";
+import { sql } from "../../../lib/db";
 
 export async function GET() {
+
   const carts = await sql`SELECT * FROM abandoned_carts ORDER BY id DESC`;
   const interventions = await sql`SELECT * FROM interventions ORDER BY id ASC`;
 

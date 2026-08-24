@@ -1,6 +1,7 @@
-import { sql } from "@/lib/db";
+import { sql } from "../../../../lib/db";
 
 export async function POST(
+
   _req: Request,
   { params }: { params: Promise<{ cartId: string }> }
 ) {
