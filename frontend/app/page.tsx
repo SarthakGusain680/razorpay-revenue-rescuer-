@@ -97,7 +97,7 @@ export default function Home() {
     setBusy("simulate");
     const pick = randomPool[Math.floor(Math.random() * randomPool.length)];
     try {
-      await fetch(`${API}/webhook/abandoned-cart`, {
+      await fetch(`${API}/api/webhook/abandoned-cart`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(pick),
