@@ -8,8 +8,6 @@ from . import models
 from .database import engine, Base, get_db
 from .ai_engine import decide_intervention
 
-# RESET THE DATABASE TABLES TO ADD THE NEW COLUMN
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Razorpay Revenue Rescuer API")
 
