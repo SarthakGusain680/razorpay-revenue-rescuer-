@@ -1,0 +1,29 @@
+# Virtual environment
+backend/venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+.next/
+out/
+frontend/.next/
+
+# IDE & misc
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db
