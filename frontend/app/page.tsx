@@ -114,18 +114,16 @@ export default function Home() {
     try {
       const res = await fetch(`${API}/api/simulate-batch`, { method: "POST" });
       if (!res.ok) throw new Error("batch failed");
-      const data = await res.json();
-    setBatchStats({
-       total_recovered: data.total_recovered,
-       total_value_at_risk: data.total_value_at_risk,
-       recovery_rate: data.recovery_rate,
+      const batchData = await res.json();
+      setBatchStats({
+        total_recovered: batchData.total_recovered,
+        total_value_at_risk: batchData.total_value_at_risk,
+        recovery_rate: batchData.recovery_rate,
       });
-console.log("Batch stats set:", data);
       await fetchDashboard();
-   } catch (e) {
-  alert("Batch failed: " + (e as Error).message);
-  console.error("Batch simulation failed", e);
-} finally {
+    } catch (e) {
+      console.error("Batch simulation failed", e);
+    } finally {
       setBusy(null);
     }
   }
@@ -226,6 +224,35 @@ console.log("Batch stats set:", data);
           </div>
         </section>
 
+        {/* 🎯 Batch Simulation Results — now right below the top metrics */}
+        {batchStats && (
+          <section className="rise mb-16 bg-panel border border-amber/25 rounded-2xl p-8 md:p-10">
+            <div className="flex items-center justify-between mb-8">
+              <p className="text-sm text-amber">/ batch simulation results — measured recovery</p>
+              <button
+                onClick={() => setBatchStats(null)}
+                className="text-xs border border-cream/20 rounded-lg px-4 py-2 hover:bg-cream/5 transition-colors"
+              >
+                clear stats
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
+                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ total value at risk</p>
+                <p className="font-display text-4xl md:text-5xl text-cream">₹{batchStats.total_value_at_risk.toLocaleString("en-IN")}</p>
+              </div>
+              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
+                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ amount recovered</p>
+                <p className="font-display text-4xl md:text-5xl text-sage">₹{batchStats.total_recovered.toLocaleString("en-IN")}</p>
+              </div>
+              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
+                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ recovery rate</p>
+                <p className="font-display text-4xl md:text-5xl text-amber">{batchStats.recovery_rate}%</p>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="mb-20">
           <div className="flex items-center justify-between mb-6">
             <p className="text-sm text-muted">/ live audit trail</p>
@@ -318,35 +345,6 @@ console.log("Batch stats set:", data);
             </div>
           )}
         </section>
-
-        {/* 🎯 NEW: Batch Simulation Results Section */}
-        {batchStats && (
-          <section className="rise mb-20 bg-panel border border-cream/15 rounded-2xl p-8 md:p-10" style={{ animationDelay: "100ms" }}>
-            <div className="flex items-center justify-between mb-8">
-              <p className="text-sm text-muted">/ batch simulation results</p>
-              <button
-                onClick={() => setBatchStats(null)}
-                className="text-xs border border-cream/20 rounded-lg px-4 py-2 hover:bg-cream/5 transition-colors"
-              >
-                clear stats
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
-                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ total value at risk</p>
-                <p className="font-display text-4xl md:text-5xl text-cream">₹{batchStats.total_value_at_risk.toLocaleString("en-IN")}</p>
-              </div>
-              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
-                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ amount recovered</p>
-                <p className="font-display text-4xl md:text-5xl text-sage">₹{batchStats.total_recovered.toLocaleString("en-IN")}</p>
-              </div>
-              <div className="bg-ink/40 rounded-xl p-6 border border-cream/5">
-                <p className="text-xs text-muted mb-3 uppercase tracking-wider">/ recovery rate</p>
-                <p className="font-display text-4xl md:text-5xl text-amber">{batchStats.recovery_rate}%</p>
-              </div>
-            </div>
-          </section>
-        )}
 
         <footer className="flex flex-wrap gap-8 text-sm text-muted pb-10">
           <span>/ bounded</span>
