@@ -71,6 +71,7 @@ export default function Home() {
   const [slow, setSlow] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [batchStats, setBatchStats] = useState<{total_recovered: number; total_value_at_risk: number; recovery_rate: number} | null>(null);
 
   const fetchDashboard = useCallback(async () => {
     const timer = setTimeout(() => setSlow(true), 2000);
@@ -113,7 +114,11 @@ export default function Home() {
     const res = await fetch(`${API}/api/simulate-batch`, { method: "POST" });
     if (!res.ok) throw new Error("batch failed");
     const data = await res.json();
-    alert(`Batch complete: ₹${data.total_recovered} recovered out of ₹${data.total_value_at_risk} (${data.recovery_rate}% rate)`);
+  setBatchStats({
+    total_recovered: data.total_recovered,
+    total_value_at_risk: data.total_value_at_risk,
+    recovery_rate: data.recovery_rate,
+  });
     await fetchDashboard();
   } catch (e) {
     alert("Batch simulation failed");
@@ -196,8 +201,8 @@ export default function Home() {
           <button
             onClick={simulateBatch}
             disabled={busy === "batch"}
-            className="bg-amber text-ink font-semibold px-6 py-3 rounded-lg hover:bg-cream transition disabled:opacity-50 mt-4"
-          >
+            className="bg-amber text-ink font-semibold px-6 py-3 rounded-lg hover:bg-cream transition disabled:opacity-50 ml-4"
+            >
   {busy === "batch" ? "Processing 20 carts…" : "+ simulate batch (20 carts)"}
 </button>
         </section>
@@ -317,6 +322,31 @@ export default function Home() {
           <span className="ml-auto text-cream/40">built for the Razorpay buildathon</span>
         </footer>
       </div>
+      {batchStats && (
+  <div className="mt-12 bg-panel border border-cream/15 rounded-xl p-8">
+    <p className="text-sm text-muted mb-6">/ batch simulation results</p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <p className="text-xs text-muted mb-2">/ total value at risk</p>
+        <p className="font-display text-4xl text-cream">₹{batchStats.total_value_at_risk.toLocaleString()}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted mb-2">/ recovered</p>
+        <p className="font-display text-4xl text-amber">₹{batchStats.total_recovered.toLocaleString()}</p>
+      </div>
+      <div>
+        <p className="text-xs text-muted mb-2">/ recovery rate</p>
+        <p className="font-display text-4xl text-amber">{batchStats.recovery_rate}%</p>
+      </div>
+    </div>
+    <button
+      onClick={() => setBatchStats(null)}
+      className="mt-6 text-xs border border-cream/20 rounded-lg px-4 py-2 hover:bg-cream/5 transition"
+    >
+      clear stats
+    </button>
+  </div>
+)}
     </main>
   );
 }
