@@ -32,6 +32,9 @@ export async function GET() {
       items: c.items,
       status: c.status,
       interventions: byCart[c.id as number] ?? [],
-    })),
+        })),
+  },
+  {
+    headers: { "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10" },
   });
 }
