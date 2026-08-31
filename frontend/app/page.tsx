@@ -115,15 +115,17 @@ export default function Home() {
       const res = await fetch(`${API}/api/simulate-batch`, { method: "POST" });
       if (!res.ok) throw new Error("batch failed");
       const data = await res.json();
-      setBatchStats({
-        total_recovered: data.total_recovered,
-        total_value_at_risk: data.total_value_at_risk,
-        recovery_rate: data.recovery_rate,
+    setBatchStats({
+       total_recovered: data.total_recovered,
+       total_value_at_risk: data.total_value_at_risk,
+       recovery_rate: data.recovery_rate,
       });
+console.log("Batch stats set:", data);
       await fetchDashboard();
-    } catch (e) {
-      console.error("Batch simulation failed", e);
-    } finally {
+   } catch (e) {
+  alert("Batch failed: " + (e as Error).message);
+  console.error("Batch simulation failed", e);
+} finally {
       setBusy(null);
     }
   }
