@@ -107,6 +107,20 @@ export default function Home() {
       setBusy(null);
     }
   }
+  async function simulateBatch() {
+  setBusy("batch");
+  try {
+    const res = await fetch(`${API}/api/simulate-batch`, { method: "POST" });
+    if (!res.ok) throw new Error("batch failed");
+    const data = await res.json();
+    alert(`Batch complete: ₹${data.total_recovered} recovered out of ₹${data.total_value_at_risk} (${data.recovery_rate}% rate)`);
+    await fetchDashboard();
+  } catch (e) {
+    alert("Batch simulation failed");
+  } finally {
+    setBusy(null);
+  }
+}
 
   async function intervene(cartId: number) {
     setBusy(`intervene-${cartId}`);
