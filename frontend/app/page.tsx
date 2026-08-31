@@ -193,6 +193,13 @@ export default function Home() {
           >
             {busy === "simulate" ? "AI is deciding…" : "+ simulate abandoned cart"}
           </button>
+          <button
+            onClick={simulateBatch}
+            disabled={busy === "batch"}
+            className="bg-amber text-ink font-semibold px-6 py-3 rounded-lg hover:bg-cream transition disabled:opacity-50 mt-4"
+          >
+  {busy === "batch" ? "Processing 20 carts…" : "+ simulate batch (20 carts)"}
+</button>
         </section>
 
         <section className="rise grid grid-cols-1 md:grid-cols-3 gap-px bg-cream/10 border border-cream/10 rounded-2xl overflow-hidden mb-16" style={{ animationDelay: "500ms" }}>
