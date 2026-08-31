@@ -73,10 +73,10 @@ export default function Home() {
   const [busy, setBusy] = useState<string | null>(null);
   const [batchStats, setBatchStats] = useState<{total_recovered: number; total_value_at_risk: number; recovery_rate: number} | null>(null);
 
-  const fetchDashboard = useCallback(async () => {
+  const fetchDashboard = useCallback(async (bust = false) => {
     const timer = setTimeout(() => setSlow(true), 2000);
     try {
-      const res = await fetch(`${API}/api/dashboard`);
+     const res = await fetch(bust ? `${API}/api/dashboard?fresh=${Date.now()}` : `${API}/api/dashboard`);
       if (!res.ok) throw new Error("Backend error " + res.status);
       const json = await res.json();
       setData(json);
@@ -103,7 +103,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(pick),
       });
-      await fetchDashboard();
+      await fetchDashboard(true);
     } finally {
       setBusy(null);
     }
@@ -120,7 +120,7 @@ export default function Home() {
         total_value_at_risk: batchData.total_value_at_risk,
         recovery_rate: batchData.recovery_rate,
       });
-      await fetchDashboard();
+      await fetchDashboard(true);
     } catch (e) {
       console.error("Batch simulation failed", e);
     } finally {
@@ -132,7 +132,7 @@ export default function Home() {
     setBusy(`intervene-${cartId}`);
     try {
       await fetch(`${API}/api/intervene/${cartId}`, { method: "POST" });
-      await fetchDashboard();
+      await fetchDashboard(true);
     } finally {
       setBusy(null);
     }
@@ -142,7 +142,7 @@ export default function Home() {
     setBusy(`recover-${cartId}`);
     try {
       await fetch(`${API}/api/recover/${cartId}`, { method: "POST" });
-      await fetchDashboard();
+      await fetchDashboard(true);
     } finally {
       setBusy(null);
     }
